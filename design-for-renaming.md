@@ -9,6 +9,8 @@ Emma Humphries (http://emmah.net)
 
 ^ I recently changed my name, and consequently have run into a variety of experiences, good and bad online as a result
 
+^ I also wrote the original [Unitarian Universalist Jihad Name Generator](http://emmah.net/ujname.html), so if that doesn't establish my bona fides.
+
 Caveats
 -------
 
@@ -25,18 +27,42 @@ What I'm Going to Cover
 
 * Why does this matter
 * Rules of Thumb
-  * Ask yourself what names your system need?
-  * Computers are good at microaggressions
-  * Everyone has many names
-  * The State is Transphobic by Nature (but you don't have to be.)
+    * Ask yourself what names your system need?
+    * Computers are good at microaggressions
+    * Everyone has many names
+    * The State is Transphobic by Nature (but you don't have to be.)
+* Things To Do
 * Questions
 
 Why Does This Matter
 --------------------
 
 * The size of the issue
-  * We know that for better or worse, around 80% of women-identified US residents change their name on marriage
-  * Despite most States offerning 
+    * We know that for better or worse, around 80% of women-identified US residents change their name on marriage
+    * Despite that most States include a legal name change when you marry, you're still going to have to change bank accounts, credit cards, medical records, and several online accounts
+
+Prior Art
+---------
+
+* [Falsehoods Programmers Believe About Names](http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)
+* [Personal Names Around the World](http://www.w3.org/International/questions/qa-personal-names) (W3C)
+
+Things To Do
+------------
+
+* Audit names in your systems
+    * Where are names exposed to users
+    * Where are names exposed to CSRs
+    * Do you need to store a wallet name?
+* If you must keep a user/customer's wallet name, offer a display/preferred name
+    * Use it to address the customer everywhere (web, email, phone, postal, apps)
+    * Make sure that CSRs see the preferred name first
+    * Limit access to wallet names (security, audit)
+* Make it easy and clear for people to change names
+    * Help system entry
+    * Clear process
+    * Tell people up front if they have to talk to someone on the phone, provide alternatives
+    * Securely handle people documentation (court orders and copies of identity documents are attractive to attackers, state and non-state)
 
 Notes
 -----
@@ -54,6 +80,35 @@ Notes
     * Digital things now: music, books, software licences, mobile apps and these things are initmate 
 
 > @danimgrace: Take your husband’s last name. Take his first name. Take his social. Assume his identity. Hide the body in a closet. You’re the husband now. http://twitter.com/danimgrace/status/598204691374280704
+
+LSL Example of Names
+--------------------
+
+```
+string get_name_for_uuid(key uuid)
+{
+    // try for a display name
+    string name = llGetDisplayName(uuid);
+    
+    // if name service is down, look up legacy name
+    if (name == "???" || name == "")
+    {
+        name = llKey2Name(uuid);
+
+        // convert name (first, last) to a list
+        list parts = llParseString2List(name, [" "], []);
+        
+        // legacy name of post-display name residents is always "Resident" so throw away that part and return
+        // first name as user name
+        if (llList2String(parts, 1) == "Resident")
+        {
+            name = llList2String(parts, 0);                    
+        }    
+    }
+    
+    return name;
+}
+```
 
 Guidelines
 ----------
@@ -86,3 +141,5 @@ References
 * https://www4.uwm.edu/eti/2007/VoterID.htm
 * http://www.brennancenter.org/sites/default/files/legacy/d/download_file_39242.pdf
 * http://www.theexpeditioner.com/2010/02/17/how-many-americans-have-a-passport-2/
+* http://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/
+* http://www.w3.org/International/questions/qa-personal-names
