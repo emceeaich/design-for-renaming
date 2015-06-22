@@ -1,9 +1,7 @@
 Design for Renaming
 ===================
 
-Emma Humphries 
-
-@emceeaich
+Emma Humphries (http://emmah.net) 
 
 ^ I work on the web to app funnel at Peel Technologies
 
